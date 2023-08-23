@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Text;
+using System.Threading;
 using System.Xml;
 
 namespace UserGroupXml
@@ -14,7 +16,10 @@ namespace UserGroupXml
             {
                 return;
             }
-            fileName= fileName.Trim()+".xml";
+
+            var extension = Path.GetExtension(fileName);
+            if (extension == "")
+                fileName = fileName.Trim() + ".xml";
             CreateXmlFile(fileName);
             var doc = new XmlDocument();
             doc.Load(fileName);
@@ -26,14 +31,15 @@ namespace UserGroupXml
             for (var i = 1; i <= noOfItems; i++)
             {
                 var entity = doc.CreateElement("Entity");
-                entity.SetAttribute("DisplayName", "Mahesh Yadava" + i);
-                entity.SetAttribute("Name", "i:0#.f|membership|Mahesh.Yadava" + i + "@asteroidnepal.com");
-                entity.SetAttribute("Sid", "i:0#.f|membership|Mahesh.Yadava" + i + "@asteroidnepal.com");
-                entity.SetAttribute("Email", "Mahesh.Yadava" + i + "@asteroidnepal.com");
+                var randomString = CreateRandomString(9).ToLower() + "mahesh.yadav";
+                entity.SetAttribute("DisplayName", randomString);
+                entity.SetAttribute("Name", "i:0#.f|membership|" + randomString + "@asteroidnepal.com");
+                entity.SetAttribute("Sid", "i:0#.f|membership|" + randomString + "@asteroidnepal.com");
+                entity.SetAttribute("Email", randomString + "@asteroidnepal.com");
                 doc.DocumentElement?.AppendChild(entity);
             }
 
-            Console.WriteLine(noOfItems+ " users added.");
+            Console.WriteLine(noOfItems + " users added.");
 
             doc.Save(fileName);
             Console.ReadLine();
@@ -51,6 +57,29 @@ namespace UserGroupXml
                 writer.Close();
                 Console.WriteLine("XML File created!");
             }
+        }
+
+        /// <summary>
+        /// Create random string with specified size as parameter
+        /// </summary>
+        /// <param name="size"></param>
+        /// <returns></returns>
+        private static string CreateRandomString(int size)
+        {
+            // Required otherwise it creates same value
+            Thread.Sleep(1);
+            var builder = new StringBuilder();
+            var random = new Random();
+
+            for (var i = 0; i < size; i++)
+            {
+                var c = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(c);
+            }
+
+            var randomString = builder.ToString();
+            //Console.WriteLine(randomString);
+            return randomString;
         }
     }
 }
