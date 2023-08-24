@@ -36,6 +36,7 @@ namespace UserGroupXml
                 entity.SetAttribute("Name", "i:0#.f|membership|" + randomString + "@asteroidnepal.com");
                 entity.SetAttribute("Sid", "i:0#.f|membership|" + randomString + "@asteroidnepal.com");
                 entity.SetAttribute("Email", randomString + "@asteroidnepal.com");
+                entity.SetAttribute("IsGroup", randomString.Contains("z")?"True":"False");
                 doc.DocumentElement?.AppendChild(entity);
             }
 
